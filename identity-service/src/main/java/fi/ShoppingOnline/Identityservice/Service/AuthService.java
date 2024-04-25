@@ -1,5 +1,8 @@
 package fi.ShoppingOnline.Identityservice.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,13 @@ public class AuthService {
     private JwtService jwtService ;
 
     public String saveUser(UserCredentials userCredentials){
+       
+        Optional<UserCredentials> user1 = userRepositary.findByUsername(userCredentials.getUsername()) ;
+
+        if(!user1.isEmpty()){
+
+            return "User is already present in the database" ;
+        }
         userCredentials.setPassword(passwordEncoder.encode(userCredentials.getPassword()));
         userRepositary.save(userCredentials);
         return "user created" ;
